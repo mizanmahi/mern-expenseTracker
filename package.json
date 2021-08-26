@@ -6,9 +6,10 @@
   "author": "mizanmahi <mizanmahi24@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "node server.js",
     "client": "cd client && yarn start",
-    "dev": "concurrently \" yarn start\" \" yarn client\" "
+    "dev": "concurrently \" yarn start\" \" yarn client\" ",
+    "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
   },
   "dependencies": {
     "colors": "^1.4.0",

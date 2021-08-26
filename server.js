@@ -2,7 +2,6 @@ const path = require('path');
 
 const express = require('express');
 const dotenv = require('dotenv');
-const colors = require('colors');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 
@@ -27,26 +26,22 @@ mongoose
     useCreateIndex: true,
   })
   .then((conn) => {
-    console.log(
-      `Mongo db connected successfully on ${conn.connection.host}`.white.bold
-    );
+    console.log(`Mongo db connected successfully on ${conn.connection.host}`);
   });
-
-console.log(  path.resolve(__dirname, 'client', 'build', 'index.html'));
-
 
 app.use('/api/v1/transactions', transactions);
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, "client", 'build')));
+  app.use(express.static(path.join(__dirname, 'client', 'build')));
   app.get('*', (req, res) => {
     return res.sendFile('index.html');
   });
 }
 
-app.listen(process.env.PORT, () =>
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () =>
   console.log(
-    `Server is running in ${process.env.NODE_ENV} mode on port ${process.env.PORT}`
-      .white.bold
+    `Server is running in ${process.env.NODE_ENV} mode on port ${PORT}`
   )
 );
