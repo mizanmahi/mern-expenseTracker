@@ -1,3 +1,5 @@
+const path = require('path');
+
 const express = require('express');
 const dotenv = require('dotenv');
 const colors = require('colors');
@@ -6,6 +8,8 @@ const mongoose = require('mongoose');
 
 const transactions = require('./routes/transactions');
 
+dotenv.config({ path: './config/config.env' });
+
 const app = express();
 
 app.use(express.json());
@@ -13,8 +17,6 @@ app.use(express.json());
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
-
-dotenv.config({ path: './config/config.env' });
 
 // connecting to the mongo db
 mongoose
@@ -30,7 +32,17 @@ mongoose
     );
   });
 
+console.log(  path.resolve(__dirname, 'client', 'build', 'index.html'));
+
+
 app.use('/api/v1/transactions', transactions);
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, "client", 'build')));
+  app.get('*', (req, res) => {
+    return res.sendFile('index.html');
+  });
+}
 
 app.listen(process.env.PORT, () =>
   console.log(
