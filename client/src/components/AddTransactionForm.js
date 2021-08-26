@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { GlobalContext } from '../context/GlobalContext';
-import uuid from 'react-uuid';
+import axios from 'axios';
 
 const AddTransactionForm = () => {
   const [text, setText] = useState('');
@@ -13,13 +13,28 @@ const AddTransactionForm = () => {
     name === 'text' ? setText(value) : setAmount(+value);
   };
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
 
-    // generating a random id for new transaction
-    const id = uuid();
+    const config = {
+      'Content-Type': 'application/json',
+    };
 
-    dispatch({ type: 'ADD_TRANSACTION', payload: { text, amount, id } });
+    try {
+      const res = await axios.post(
+        '/api/v1/transactions',
+        {
+          text,
+          amount,
+        },
+        config
+      );
+      dispatch({ type: 'ADD_TRANSACTION', payload: res.data.data });
+      setAmount('');
+      setText('');
+    } catch (err) {
+      dispatch({ type: 'TRANSACTION_ERROR', payload: err.message });
+    }
   };
 
   return (

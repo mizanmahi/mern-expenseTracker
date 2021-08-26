@@ -4,6 +4,8 @@ import { AppReducer } from './AppReducer';
 
 const InitialState = {
   transaction: [],
+  loading: true,
+  error: null
 };
 
 // creating context
@@ -15,7 +17,7 @@ export const GlobalContextProvider = (props) => {
 
   return (
     <GlobalContext.Provider
-      value={{ transaction: state.transaction, dispatch }}
+      value={{ transaction: state.transaction, dispatch, loading: state.loading, error: state.error }}
     >
       {props.children}
     </GlobalContext.Provider>
